@@ -2,7 +2,651 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ことば</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #111;
+    --gray-dark: #555;
+    --gray: #999;
+    --gray-light: #e8e8e8;
+  }
+
+  body {
+    background: #f2f2f2;
+    color: var(--black);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #fff;
+    border-bottom: 1px solid var(--gray-light);
+    padding: 16px 20px 12px;
+  }
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+  }
+
+  .header-btns { display: flex; gap: 8px; align-items: center; }
+
+  .btn-add {
+    background: var(--black);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s;
+  }
+  .btn-add:hover { opacity: 0.7; }
+
+  .btn-print {
+    background: none;
+    border: 1px solid var(--gray-light);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 12px;
+    color: var(--gray-dark);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-print:hover { border-color: var(--black); color: var(--black); }
+
+  .search-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--gray-light);
+    padding: 6px 0;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--black);
+    background: transparent;
+    outline: none;
+  }
+  .search-input::placeholder { color: var(--gray); }
+
+  /* 接続設定 */
+  .setup-banner {
+    margin: 20px 16px;
+    padding: 20px;
+    border: 1px solid var(--gray-light);
+    border-radius: 10px;
+    background: #fff;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--gray-dark);
+  }
+
+  .setup-banner strong { color: var(--black); font-weight: 500; }
+
+  .setup-input {
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--gray-light);
+    border-radius: 6px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 13px;
+    color: var(--black);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .setup-input:focus { border-color: var(--black); }
+
+  .btn-connect {
+    margin-top: 10px;
+    background: var(--black);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 20px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-connect:hover { opacity: 0.75; }
+
+  .tag-filter {
+    padding: 10px 16px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--gray-light);
+    background: #fff;
+  }
+
+  .tag-chip {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    border: 1px solid var(--gray-light);
+    color: var(--gray-dark);
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .tag-chip.active {
+    background: var(--black);
+    color: #fff;
+    border-color: var(--black);
+  }
+
+  .list { padding: 12px 16px 100px; }
+
+  .count-label {
+    font-size: 11px;
+    color: var(--gray);
+    padding: 4px 0 10px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 18px 18px 14px;
+    margin-bottom: 10px;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-quote {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    line-height: 2;
+    color: var(--black);
+    margin-bottom: 12px;
+  }
+
+  .card-divider { height: 1px; background: #f0f0f0; margin-bottom: 10px; }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--gray);
+    margin-bottom: 8px;
+  }
+
+  .source-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .dot-本 { background: #6aaa64; }
+  .dot-X { background: #1da1f2; }
+  .dot-会話 { background: #f0a500; }
+  .dot-その他 { background: #ccc; }
+
+  .card-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .card-tag { font-size: 11px; color: var(--gray); cursor: pointer; }
+  .card-tag::before { content: '#'; }
+  .card-tag:hover { color: var(--black); }
+
+  .card-memo {
+    font-size: 13px;
+    color: var(--gray-dark);
+    line-height: 1.7;
+    background: #fafafa;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+
+  .card-footer {
+    display: flex; align-items: center; justify-content: space-between; margin-top: 2px;
+  }
+  .card-date { font-size: 11px; color: var(--gray); }
+
+  .btn-delete {
+    background: none; border: none; color: #ddd;
+    font-size: 14px; cursor: pointer; transition: color 0.15s; padding: 0;
+  }
+  .btn-delete:hover { color: #e05555; }
+
+  .btn-edit {
+    background: none; border: none; color: #ccc;
+    font-size: 12px; cursor: pointer; transition: color 0.15s; padding: 0;
+    font-family: 'Noto Sans JP', sans-serif; font-weight: 400;
+  }
+  .btn-edit:hover { color: var(--black); }
+
+  /* モーダル */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.25); z-index: 200; align-items: flex-end;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: #fff; border-radius: 16px 16px 0 0;
+    padding: 20px 20px 48px; width: 100%; max-height: 92vh;
+    overflow-y: auto; animation: slideUp 0.28s cubic-bezier(0.32,0.72,0,1);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .modal-handle {
+    width: 36px; height: 3px; background: var(--gray-light);
+    border-radius: 2px; margin: 0 auto 20px;
+  }
+
+  .modal h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 16px; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 20px;
+  }
+
+  .form-group { margin-bottom: 18px; }
+
+  .form-label {
+    display: block; font-size: 11px; font-weight: 500;
+    color: var(--gray); letter-spacing: 0.08em; margin-bottom: 6px;
+  }
+
+  .form-input, .form-textarea, .form-select {
+    width: 100%; padding: 9px 0; border: none;
+    border-bottom: 1px solid var(--gray-light);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: 300;
+    color: var(--black); background: transparent; outline: none;
+    transition: border-color 0.2s; appearance: none;
+  }
+  .form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-bottom-color: var(--black);
+  }
+  .form-textarea { height: 90px; resize: none; line-height: 1.8; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .btn-submit {
+    width: 100%; background: var(--black); color: #fff; border: none;
+    border-radius: 8px; padding: 14px;
+    font-family: 'Noto Serif JP', serif; font-size: 15px;
+    letter-spacing: 0.1em; cursor: pointer; margin-top: 8px; transition: opacity 0.2s;
+  }
+  .btn-submit:hover { opacity: 0.75; }
+  .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-cancel {
+    width: 100%; background: none; border: none; padding: 12px;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 13px;
+    color: var(--gray); cursor: pointer; margin-top: 4px;
+  }
+
+  .status-msg {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    background: var(--black); color: #fff; padding: 9px 20px;
+    border-radius: 30px; font-size: 13px; z-index: 400;
+    opacity: 0; transition: opacity 0.25s; white-space: nowrap;
+  }
+  .status-msg.show { opacity: 1; }
+
+  /* 印刷 */
+  #printArea { display: none; }
+
+  @media print {
+    @page { size: A4; margin: 18mm 16mm; }
+    body > *:not(#printArea) { display: none !important; }
+    #printArea { display: block !important; font-family: 'Noto Serif JP', serif; color: #111; }
+    .print-header { text-align: center; border-bottom: 1.5px solid #111; padding-bottom: 8px; margin-bottom: 20px; }
+    .print-title { font-size: 22px; font-weight: 600; letter-spacing: 0.2em; }
+    .print-date { font-size: 10px; color: #888; margin-top: 4px; font-family: 'Noto Sans JP', sans-serif; font-weight: 300; }
+    .print-item { break-inside: avoid; padding: 14px 0; border-bottom: 0.5px solid #ddd; }
+    .print-item:last-child { border-bottom: none; }
+    .print-quote { font-size: 13.5px; line-height: 2.1; margin-bottom: 7px; }
+    .print-meta { font-family: 'Noto Sans JP', sans-serif; font-size: 10px; color: #777; font-weight: 300; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 4px; }
+    .print-source-label { font-size: 9px; border: 0.5px solid #bbb; border-radius: 3px; padding: 1px 5px; color: #666; }
+    .print-tags { font-family: 'Noto Sans JP', sans-serif; font-size: 9.5px; color: #aaa; font-weight: 300; }
+    .print-tags span::before { content: '#'; }
+    .print-tags span + span::before { content: '  #'; }
+    .print-memo { font-family: 'Noto Sans JP', sans-serif; font-size: 10.5px; color: #555; font-weight: 300; line-height: 1.8; margin-top: 5px; padding-left: 10px; border-left: 1.5px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-row">
+    <h1>ことば</h1>
+    <div class="header-btns">
+      <button class="btn-print" onclick="printQuotes()">印刷</button>
+      <button class="btn-add" onclick="openModal()">+</button>
+    </div>
+  </div>
+  <input class="search-input" type="search" id="searchInput" placeholder="検索">
+</header>
+
+<!-- 接続設定 -->
+<div class="setup-banner" id="setupBanner">
+  <strong>接続設定</strong><br>
+  Apps ScriptのウェブアプリURLを貼り付けてください。
+  <input class="setup-input" type="url" id="urlInput" placeholder="https://script.google.com/macros/s/…">
+  <br>
+  <button class="btn-connect" onclick="saveUrl()">接続する</button>
+</div>
+
+<div class="tag-filter" id="tagFilter" style="display:none;"></div>
+<div class="list" id="list"></div>
+<div id="printArea"></div>
+
+<!-- モーダル -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h2 id="modalTitle">記録する</h2>
+    <div class="form-group">
+      <label class="form-label">言葉 *</label>
+      <textarea class="form-textarea" id="f_quote" placeholder="心に残った言葉…"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">出典の種類</label>
+      <select class="form-select" id="f_source">
+        <option value="本">本</option>
+        <option value="X">X（旧Twitter）</option>
+        <option value="会話">会話</option>
+        <option value="その他">その他</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">タイトル・出典名</label>
+        <input class="form-input" id="f_title" type="text" placeholder="書名など">
+      </div>
+      <div class="form-group">
+        <label class="form-label">著者・発言者</label>
+        <input class="form-input" id="f_author" type="text" placeholder="著者名など">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">タグ（カンマ区切り）</label>
+      <input class="form-input" id="f_tags" type="text" placeholder="仕事, 励まし, 人生">
+    </div>
+    <div class="form-group">
+      <label class="form-label">メモ</label>
+      <textarea class="form-textarea" id="f_memo" placeholder="感想や気づきなど…" style="height:70px;"></textarea>
+    </div>
+    <button class="btn-submit" id="submitBtn" onclick="submitQuote()">保存</button>
+    <button class="btn-cancel" onclick="closeModal()">キャンセル</button>
+  </div>
+</div>
+
+<div class="status-msg" id="statusMsg"></div>
+
+<script>
+  let allData = [];
+  let activeTag = 'all';
+  const KEY = 'kotoba_gas_url';
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const url = localStorage.getItem(KEY);
+    if (url) {
+      document.getElementById('setupBanner').style.display = 'none';
+      document.getElementById('tagFilter').style.display = 'flex';
+      loadData();
+    }
+  });
+
+  function saveUrl() {
+    const url = document.getElementById('urlInput').value.trim();
+    if (!url.startsWith('https://script.google.com')) {
+      showStatus('URLが正しくありません'); return;
+    }
+    localStorage.setItem(KEY, url);
+    document.getElementById('setupBanner').style.display = 'none';
+    document.getElementById('tagFilter').style.display = 'flex';
+    showStatus('接続しました！');
+    loadData();
+  }
+
+  const getUrl = () => localStorage.getItem(KEY);
+
+  async function loadData() {
+    const url = getUrl(); if (!url) return;
+    document.getElementById('list').innerHTML = '<div style="padding:60px 20px;text-align:center;color:#bbb;font-size:13px;">読み込み中…</div>';
+    try {
+      const res = await fetch(url);
+      allData = (await res.json()).reverse();
+      renderAll();
+    } catch {
+      document.getElementById('list').innerHTML = '<div style="padding:40px 20px;text-align:center;color:#bbb;font-size:13px;">読み込めませんでした。URLを確認してください。</div>';
+    }
+  }
+
+  function renderAll() { updateTagFilter(); renderList(); }
+
+  function updateTagFilter() {
+    const tagSet = new Set();
+    allData.forEach(d => (d['タグ']||'').split(',').forEach(t => { const s=t.trim(); if(s) tagSet.add(s); }));
+    const filter = document.getElementById('tagFilter');
+    filter.innerHTML = `<span class="tag-chip active" data-tag="all" onclick="filterTag('all',this)">すべて</span>`;
+    tagSet.forEach(tag => {
+      const chip = document.createElement('span');
+      chip.className='tag-chip'; chip.dataset.tag=tag; chip.textContent=tag;
+      chip.onclick = () => filterTag(tag, chip);
+      filter.appendChild(chip);
+    });
+  }
+
+  function filterTag(tag, el) {
+    activeTag = tag;
+    document.querySelectorAll('.tag-chip').forEach(c => c.classList.toggle('active', c.dataset.tag===tag));
+    renderList();
+  }
+
+  document.getElementById('searchInput').addEventListener('input', () => renderList());
+
+  function getFiltered() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    return allData.filter(d => {
+      const mQ = !q || (d['言葉']||'').toLowerCase().includes(q) || (d['タイトル']||'').toLowerCase().includes(q) || (d['著者']||'').toLowerCase().includes(q);
+      const mT = activeTag==='all' || (d['タグ']||'').split(',').map(t=>t.trim()).includes(activeTag);
+      return mQ && mT;
+    });
+  }
+
+  function renderList() {
+    const filtered = getFiltered();
+    const list = document.getElementById('list');
+    if (!filtered.length) {
+      list.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#bbb;font-size:14px;">${allData.length?'該当なし':'最初の言葉を記録しましょう'}</div>`;
+      return;
+    }
+    list.innerHTML = `<div class="count-label">${filtered.length} 件</div>` + filtered.map((d,i) => cardHTML(d,i)).join('');
+  }
+
+  function cardHTML(d, idx) {
+    const src = d['出典種別']||'その他';
+    const tags = (d['タグ']||'').split(',').map(t=>t.trim()).filter(Boolean);
+    const meta = [d['タイトル'],d['著者']].filter(Boolean).join('　');
+    return `
+    <div class="card">
+      <div class="card-quote">${esc(d['言葉']||'')}</div>
+      <div class="card-divider"></div>
+      <div class="card-meta">
+        <span class="source-dot dot-${src}"></span>
+        <span>${src}</span>
+        ${meta?`<span style="color:#ddd;">·</span><span>${esc(meta)}</span>`:''}
+      </div>
+      ${tags.length?`<div class="card-tags">${tags.map(t=>`<span class="card-tag" onclick="filterTagByName('${esc(t)}')">${esc(t)}</span>`).join('')}</div>`:''}
+      ${d['メモ']?`<div class="card-memo">${esc(d['メモ'])}</div>`:''}
+      <div class="card-footer">
+        <span class="card-date">${String(d['日付']||'').slice(0,10)}</span>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <button class="btn-edit" onclick="openEditModal(${idx})">編集</button>
+          <button class="btn-delete" onclick="deleteQuote('${esc(d['言葉'])}','${String(d['日付']||'').slice(0,10)}')">×</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function filterTagByName(tag) {
+    activeTag = tag;
+    document.querySelectorAll('.tag-chip').forEach(c => c.classList.toggle('active', c.dataset.tag===tag));
+    renderList();
+  }
+
+  function printQuotes() {
+    const filtered = getFiltered();
+    if (!filtered.length) { showStatus('印刷できる言葉がありません'); return; }
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日`;
+    const items = filtered.map(d => {
+      const tags = (d['タグ']||'').split(',').map(t=>t.trim()).filter(Boolean);
+      const meta = [d['タイトル'],d['著者']].filter(Boolean);
+      return `
+      <div class="print-item">
+        <div class="print-quote">${esc(d['言葉']||'')}</div>
+        <div class="print-meta">
+          <span class="print-source-label">${esc(d['出典種別']||'その他')}</span>
+          ${meta.map(m=>`<span>${esc(m)}</span>`).join('<span style="color:#ccc;">·</span>')}
+          <span style="margin-left:auto;">${String(d['日付']||'').slice(0,10)}</span>
+        </div>
+        ${tags.length?`<div class="print-tags">${tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}
+        ${d['メモ']?`<div class="print-memo">${esc(d['メモ'])}</div>`:''}
+      </div>`;
+    }).join('');
+    document.getElementById('printArea').innerHTML = `
+      <div class="print-header">
+        <div class="print-title">ことば</div>
+        <div class="print-date">${dateStr}　${filtered.length}件${activeTag!=='all'?'　「#'+activeTag+'」':''}</div>
+      </div>${items}`;
+    window.print();
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  let editingData = null; // 編集中の元データ
+
+  function openModal() {
+    if (!getUrl()) { showStatus('まず接続設定が必要です'); return; }
+    editingData = null;
+    document.getElementById('modalTitle').textContent = '記録する';
+    document.getElementById('submitBtn').textContent = '保存';
+    document.getElementById('modal').classList.add('open');
+    setTimeout(() => document.getElementById('f_quote').focus(), 300);
+  }
+
+  function openEditModal(idx) {
+    if (!getUrl()) return;
+    const filtered = getFiltered();
+    const d = filtered[idx];
+    if (!d) return;
+    editingData = d;
+    document.getElementById('modalTitle').textContent = '編集する';
+    document.getElementById('f_quote').value = d['言葉'] || '';
+    document.getElementById('f_source').value = d['出典種別'] || '本';
+    document.getElementById('f_title').value = d['タイトル'] || '';
+    document.getElementById('f_author').value = d['著者'] || '';
+    document.getElementById('f_tags').value = d['タグ'] || '';
+    document.getElementById('f_memo').value = d['メモ'] || '';
+    document.getElementById('submitBtn').textContent = '更新';
+    document.getElementById('modal').classList.add('open');
+    setTimeout(() => document.getElementById('f_quote').focus(), 300);
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+    ['f_quote','f_title','f_author','f_tags','f_memo'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('f_source').value='本';
+    editingData = null;
+  }
+
+  async function submitQuote() {
+    const quote = document.getElementById('f_quote').value.trim();
+    if (!quote) { showStatus('言葉を入力してください'); return; }
+    const btn = document.getElementById('submitBtn');
+    btn.disabled=true; btn.textContent='保存中…';
+
+    try {
+      if (editingData) {
+        // 編集モード：削除→追加で上書き
+        await fetch(getUrl(), { method:'POST', body:JSON.stringify({action:'delete', 言葉:editingData['言葉'], 日付:String(editingData['日付']||'').slice(0,10)}) });
+        const payload = {
+          action:'add',
+          日付: String(editingData['日付']||'').slice(0,10),
+          言葉: quote,
+          出典種別: document.getElementById('f_source').value,
+          タイトル: document.getElementById('f_title').value.trim(),
+          著者: document.getElementById('f_author').value.trim(),
+          タグ: document.getElementById('f_tags').value.trim(),
+          メモ: document.getElementById('f_memo').value.trim(),
+        };
+        await fetch(getUrl(), { method:'POST', body:JSON.stringify(payload) });
+        closeModal(); showStatus('更新しました'); loadData();
+      } else {
+        // 新規追加モード
+        const now = new Date();
+        const date = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+        const payload = {
+          action:'add', 日付:date, 言葉:quote,
+          出典種別: document.getElementById('f_source').value,
+          タイトル: document.getElementById('f_title').value.trim(),
+          著者: document.getElementById('f_author').value.trim(),
+          タグ: document.getElementById('f_tags').value.trim(),
+          メモ: document.getElementById('f_memo').value.trim(),
+        };
+        await fetch(getUrl(), { method:'POST', body:JSON.stringify(payload) });
+        closeModal(); showStatus('保存しました'); loadData();
+      }
+    } catch { showStatus('失敗しました。もう一度お試しください。'); }
+    finally { btn.disabled=false; btn.textContent= editingData ? '更新' : '保存'; }
+  }
+
+  async function deleteQuote(quote, date) {
+    if (!confirm('削除しますか？')) return;
+    try {
+      await fetch(getUrl(), { method:'POST', body:JSON.stringify({action:'delete',言葉:quote,日付:date}) });
+      showStatus('削除しました'); loadData();
+    } catch { showStatus('削除に失敗しました'); }
+  }
+
+  function showStatus(msg) {
+    const el = document.getElementById('statusMsg');
+    el.textContent=msg; el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  document.getElementById('modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+</script>
+</body>
+</html>
+0">
 <title>ことば</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
